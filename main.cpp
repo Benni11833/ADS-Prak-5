@@ -30,6 +30,7 @@ void read_adjacent(const char *datafile, Weighted_graph& graph){
 int main(){
 
     Weighted_graph g1{0, 0};
+    int e1, e2;
     read_adjacent("tinyEWG.txt", g1);
 
 	g1.print_adjacent();
@@ -39,9 +40,14 @@ int main(){
 	g1.Depth_first_search();
 	std::cout << "Iterativ:\n";
 	g1.Depth_first_search_iterativ();
-	std::cin.get();
+	//std::cin.get();
 	g1.Depth_first_path_finding();
 
-	system("pause");
+    std::cout << "Edge1: "; std::cin >> e1;
+    std::cout << "Edge2: "; std::cin >> e2;
+
+    g1.check_if_connected(g1.getAdjacent()[e1][0], g1.getAdjacent()[e2][0]);
+
+	//system("pause");
     return 0;
 }

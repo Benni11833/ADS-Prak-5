@@ -27,5 +27,6 @@ public:
 	void Depth_first_search_iterativ();
 	void Depth_first_path_finding();
 	void Depth_first_path_finding_rec(Edge v);
-	bool check_if_connected(Edge& e1, Edge& e2);
+	//bool check_if_connected(Edge& e1, Edge& e2);
+    void check_if_connected(Edge &e1, Edge &e2);
 };

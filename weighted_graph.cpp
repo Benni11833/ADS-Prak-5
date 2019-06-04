@@ -81,13 +81,13 @@ void Weighted_graph::Depth_first_path_finding()
 	marked.clear();
 	marked.resize(Knoten_ + 1, false);	//fangen bei 1-4 and und nicht von 0-3
 	edgeTo.clear();
-	edgeTo.resize(Knoten_ + 1, 0);
+	edgeTo.resize(Knoten_ + 1, -1);
 	int i = 0;
 	while (adjacent_[i].size() == 0)	//damit leere maps(zb wenn Knoten 6 nicht enthalten ist, uebersprungen werden)
 		i++;
-	std::cout << "StartKnoten: " << adjacent_[i].front().From_ << std::endl;
+	//std::cout << "StartKnoten: " << adjacent_[i].front().From_ << std::endl;
 	Depth_first_path_finding_rec(adjacent_[i].front());
-	std::cout << "edgeTo:\n";
+	//std::cout << "edgeTo:\n";
 	i = 0;
 	while (adjacent_[i].size() == 0)	//leere Eintraege in edgeTo ueberspringen
 		i++;
@@ -101,8 +101,8 @@ void Weighted_graph::Depth_first_path_finding_rec(Edge v)
 {
 	marked[v.From_] = true;
 	/*Do Something with v...*/
-	std::cout << "Knoten: " << v.From_ << std::endl;
-	std::cin.get();
+	//std::cout << "Knoten: " << v.From_ << std::endl;
+	//std::cin.get();
 	for (int i = 0; i < adjacent_[v.From_].size(); i++) {
 		if (marked[adjacent_[v.From_][i].To_] == false) {
 			//if(adjacent_[v.To_].size() != 0)
@@ -113,7 +113,13 @@ void Weighted_graph::Depth_first_path_finding_rec(Edge v)
 	}
 }
 
-bool Weighted_graph::check_if_connected(Edge & e1, Edge & e2)
+void Weighted_graph::check_if_connected(Edge &e1, Edge &e2)
 {
-	return false;
+	//checkt nur ob direkt verbunden mit edgeTo
+	if(edgeTo[e1.From_] == e2.From_)
+		std::cout << e1.From_ << " is connected with " << e2.From_ 
+		<< " and has the cost of: " << e2.Weight_ << std::endl;
+	else
+		std::cout << e1.From_ << " is not connected with " << e2.From_
+		<< std::endl;
 }
