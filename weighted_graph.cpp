@@ -47,7 +47,7 @@ void Weighted_graph::Depth_first_search_rec(Edge v)
 	for (int i = 0; i < adjacent_[v.From_].size(); i++) {
 		if(marked[adjacent_[v.From_][i].To_] == false)
 			//if(adjacent_[v.To_].size() != 0)
-				Depth_first_search_rec(adjacent_[v.To_][0]);
+				Depth_first_search_rec(adjacent_[adjacent_[v.From_][i].To_][0]);
 	}
 }
 
@@ -67,27 +67,20 @@ void Weighted_graph::Depth_first_search_iterativ() {
 		/*Do Something with v...*/
 		std::cout << "Knoten: " << v.From_ << std::endl;
 
-		if (v.From_ == 1) {
-			std::cout << "Adjazenzliste von " << v.From_ << std::endl;
-			for (i = 0; i < adjacent_[v.From_].size(); i++)
-				std::cout << adjacent_[v.From_][i].To_ << " ";
-			std::cout << std::endl << std::endl;
-		}
-
 		//Alle adjazenten Knoten auf stack pushen, wenn vorhanden
 		for (i = 0, ii=0; i < adjacent_[v.From_].size(); i++) {
 			if (marked[adjacent_[v.From_][i].To_] == false) {
-				std::cout << "Pushe Knoten " << adjacent_[v.To_][0].From_ << " auf Stack, weil Adjazent von Knoten " << v.From_ << std::endl;
-				//std::cin.get();
-				stk.push(adjacent_[v.To_][0]);
+				stk.push(adjacent_[adjacent_[v.From_][i].To_][0]);
 			}
 		}
 	}
 }
 
 void Weighted_graph::Depth_first_path_finding()
-{
+{	
+	marked.clear();
 	marked.resize(Knoten_ + 1, false);	//fangen bei 1-4 and und nicht von 0-3
+	edgeTo.clear();
 	edgeTo.resize(Knoten_ + 1, 0);
 	int i = 0;
 	while (adjacent_[i].size() == 0)	//damit leere maps(zb wenn Knoten 6 nicht enthalten ist, uebersprungen werden)
