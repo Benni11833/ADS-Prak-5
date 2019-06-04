@@ -88,13 +88,13 @@ void Weighted_graph::Depth_first_path_finding()
 	//std::cout << "StartKnoten: " << adjacent_[i].front().From_ << std::endl;
 	Depth_first_path_finding_rec(adjacent_[i].front());
 	//std::cout << "edgeTo:\n";
-	i = 0;
+	/*i = 0;
 	while (adjacent_[i].size() == 0)	//leere Eintraege in edgeTo ueberspringen
 		i++;
 	i++;	//erster Eintrag ist nicht erreichbar, da StartKnoten -> ueberspringen
 	for (; i < edgeTo.size(); i++)
 		std::cout << "Knoten " << i << " ueber Kante " << edgeTo[i] << " erreichbar.\n";
-	std::cout << std::endl << std::endl;
+	std::cout << std::endl << std::endl;*/
 }
 
 void Weighted_graph::Depth_first_path_finding_rec(Edge v)
@@ -122,4 +122,22 @@ void Weighted_graph::check_if_connected(Edge &e1, Edge &e2)
 	else
 		std::cout << e1.From_ << " is not connected with " << e2.From_
 		<< std::endl;
+}
+
+std::vector<int> Weighted_graph::pathTo(int s, int v){
+	if(marked.size() == 0)
+		Depth_first_path_finding();
+	std::vector<int> path;
+	path.clear();
+	path.resize(0);
+
+	if(marked[v] == false){
+		std::cout << "marked[" << v << "] == false\n";
+		return path;
+	}
+	for(int x=v; x != s; x = edgeTo[x]){
+		path.push_back(x);
+	}
+	path.push_back(s);
+	return path;
 }

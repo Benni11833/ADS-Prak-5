@@ -33,7 +33,7 @@ int main(){
     int e1, e2;
     read_adjacent("tinyEWG.txt", g1);
 
-	g1.print_adjacent();
+	/*g1.print_adjacent();
 	std::cout << std::endl << std::endl;
 	std::cin.get();
 	std::cout << "Rekursiv:\n";
@@ -41,12 +41,20 @@ int main(){
 	std::cout << "Iterativ:\n";
 	g1.Depth_first_search_iterativ();
 	//std::cin.get();
-	g1.Depth_first_path_finding();
+	g1.Depth_first_path_finding();*/
 
     std::cout << "Edge1: "; std::cin >> e1;
     std::cout << "Edge2: "; std::cin >> e2;
 
-    g1.check_if_connected(g1.getAdjacent()[e1][0], g1.getAdjacent()[e2][0]);
+    //g1.check_if_connected(g1.getAdjacent()[e1][0], g1.getAdjacent()[e2][0]);
+    
+    std::vector<int> path;
+    path = g1.pathTo(e1, e2);
+    if(path.size() != 0)
+        std::cout << "Pfad von " << e1 << " bis " << e2 << ":\n";
+    for(auto i : path)
+        std::cout << i << " ";
+    std::cout << std::endl;
 
 	//system("pause");
     return 0;

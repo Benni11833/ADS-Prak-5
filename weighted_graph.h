@@ -29,4 +29,5 @@ public:
 	void Depth_first_path_finding_rec(Edge v);
 	//bool check_if_connected(Edge& e1, Edge& e2);
     void check_if_connected(Edge &e1, Edge &e2);
+    std::vector<int> pathTo(int s, int v);
 };
