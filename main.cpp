@@ -4,8 +4,8 @@
 int main() {
 
 	Graph g1{ false, true };
-	//g1.init("graph1.txt");
-	//g1.printAll();
+	g1.init("graph1.txt");
+	g1.printAll();
 	GraphNode gn1{ 0 };
 	Edge e{ 1, 7 };
 	gn1.addEdge(e);
