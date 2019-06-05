@@ -11,7 +11,7 @@ private:
 
 	GraphNode* getNodeByKey(int key);
 	void setAllUnvisited();
-	bool checkVisited();
+	bool checkAllVisited();
 	void startDephSearchRek(GraphNode *node);
 	bool testChildComponent(GraphNode *node);
 public:

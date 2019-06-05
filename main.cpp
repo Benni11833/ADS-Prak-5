@@ -1,16 +1,57 @@
 #include "Graph.h"
 #include <iostream>
 
+void print_menu() {
+	std::cout << "Graph-Menue" << std::endl
+		<< "1) Graph einlesen" << std::endl
+		<< "2) Tiefensuche" << std::endl
+		<< "3) Breitensuche" << std::endl
+		<< "4) Prim" << std::endl
+		<< "5) Kruskal" << std::endl
+		<< "6) Print Graph" << std::endl
+		<< "?> ";
+}
+
 int main() {
 
 	Graph g1{ false, true };
-	g1.init("graph1.txt");
-	g1.printAll();
-	GraphNode gn1{ 0 };
-	Edge e{ 1, 7 };
-	gn1.addEdge(e);
-	e = Edge{ 3, 5 };
-	gn1.addEdge(e);
+	char choice = '\0';
+	std::string file;
+	bool flag = true;
+	while (flag) {
+		print_menu();
+		std::cin >> choice;
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		switch (choice - '0') {
+		case 1:
+			std::cout << "Datei: ";
+			std::getline(std::cin, file);
+			if(g1.init(file))
+				std::cout << "Datei " << file << " wurde erfolgreich eingelesen.\n";
+			break;
+		case 2:
+			//TODO
+			g1.depthSearchRek(0);
+			break;
+		case 3:
+			//TODO
+			g1.breadthSearchiter(0);
+			break;
+		case 4:
+			//TODO
+			g1.prim(0);
+			break;
+		case 5:
+			//TODO
+			g1.kruskal(0);
+			break;
+		case 6:
+			g1.printAll();
+			break;
+		default:
+			flag = false;
+		}
+	}
 
 	system("pause");
 	return 0;

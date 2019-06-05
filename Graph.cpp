@@ -13,13 +13,17 @@ GraphNode * Graph::getNodeByKey(int key)
 void Graph::setAllUnvisited()
 {
 	for (int i = 0; i < nodes_.size(); i++) {
-		nodes_[i]->setVisited(false);
+		if(nodes_[i])
+			nodes_[i]->setVisited(false);
 	}
 }
 
-bool Graph::checkVisited()	//???
+bool Graph::checkAllVisited()
 {
-	return false;
+	for (int i = 0; i < nodes_.size(); i++)
+		if (nodes_[i] && !nodes_[i]->getVisited())
+			return false;
+	return true;
 }
 
 void Graph::startDephSearchRek(GraphNode * node)
@@ -40,22 +44,25 @@ Graph::Graph(bool gerichtet, bool gewichtet)
 
 Graph::~Graph()
 {
+	for (int i = 0; i < nodes_.size(); i++)
+		if (nodes_[i])
+			delete nodes_[i];
+	nodes_.resize(0);
 }
 
 bool Graph::init(std::string file)
 {
 	std::ifstream inFile;
+	inFile.open(file);
 	int from, to;
 	double weight;
-	inFile.open(file);
 	if (!inFile) {
 		std::cerr << "Datei " << file << " konnte nicht geoeffnet werden.\n";
 		return false;
 	}
 	inFile >> anzKnoten_;
 	nodes_.resize(anzKnoten_, nullptr);
-	while (!inFile.eof()) {
-		inFile >> from >> to >> weight;
+	while (inFile >> from >> to >> weight) {
 		if (nodes_[from] == nullptr) {	//Knoten existiert noch nicht
 			nodes_[from] = new GraphNode{ from };
 			Edge e = Edge{ to, weight };
@@ -65,7 +72,6 @@ bool Graph::init(std::string file)
 			nodes_[from]->addEdge(Edge{ to, weight });
 		}
 	}
-	//inFile.close();
 
 	return true;
 }
@@ -76,8 +82,9 @@ void Graph::printAll()
 		if (nodes_[i] != nullptr) {
 			std::cout << nodes_[i]->getKey();
 			for (int ii = 0; ii < nodes_[i]->getNumberOfEdges(); ii++) {
-				std::cout << "\t-> " << nodes_[i]->getEdge(ii)->To_ << nodes_[i]->getEdge(ii)->Weight_;
+				std::cout << " -> " << nodes_[i]->getEdge(ii)->To_ << " [" << nodes_[i]->getEdge(ii)->Weight_ << ']';
 			}
+			std::cout << std::endl;
 		}
 	}
 	std::cout << std::endl;
@@ -85,7 +92,8 @@ void Graph::printAll()
 
 bool Graph::depthSearchRek(int startKey)
 {
-	return false;
+	startDephSearchRek(nodes_[startKey]);
+	return checkAllVisited();
 }
 
 bool Graph::breadthSearchiter(int startKey)
