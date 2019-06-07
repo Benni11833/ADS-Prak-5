@@ -6,4 +6,9 @@ struct Edge{
         To_ = To;
         Weight_ = Weight;
     }
+	friend bool operator<(const Edge& e1, const Edge& e2) {
+		if (e1.Weight_ > e2.Weight_)	//fuer priority-queue
+			return true;
+		return false;
+	}
 };

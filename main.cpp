@@ -12,6 +12,8 @@ void print_menu() {
 		<< "?> ";
 }
 
+#include <queue>
+
 int main() {
 
 	Graph g1{ false, true };

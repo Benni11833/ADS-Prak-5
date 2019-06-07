@@ -46,6 +46,7 @@ Graph::Graph(bool gerichtet, bool gewichtet)
 {
 	gerichtet_ = gerichtet;
 	gewichtet_ = gewichtet;
+	anzKnoten_ = 0;
 }
 
 Graph::~Graph()
@@ -134,7 +135,23 @@ double Graph::prim(int startKey)
 
 double Graph::kruskal(int startKey)
 {
-	return 0.0;
+	if(anzKnoten_ == 0)
+		return 0.0;
+	//else:
+	std::priority_queue<Edge*> pq;
+	Edge* e = nullptr;
+	//std::vector<Edge*> e;	e.clear();
+	std::vector<bool> marked;	marked.resize(anzKnoten_, false);
+	//Alle Kanten in vector fuegen:
+	for (int i = 0; i < nodes_.size(); i++)
+		for (int j = 0; j < nodes_[i]->getNumberOfEdges(); j++)
+			pq.push(nodes_[i]->getEdge(j));
+	
+	while (!pq.empty()) {
+		e = pq.top();
+		pq.pop();
+		
+	}
 }
 
 int Graph::getAnzKnoten()
