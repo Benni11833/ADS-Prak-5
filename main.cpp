@@ -22,20 +22,35 @@ int main() {
 		print_menu();
 		std::cin >> choice;
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		std::cout << "Anz: " << g1.getAnzKnoten() << std::endl;
 		switch (choice - '0') {
 		case 1:
 			std::cout << "Datei: ";
 			std::getline(std::cin, file);
-			if(g1.init(file))
+			if (g1.init(file))
 				std::cout << "Datei " << file << " wurde erfolgreich eingelesen.\n";
 			break;
 		case 2:
 			//TODO
-			g1.depthSearchRek(0);
+			if (g1.getAnzKnoten() != 0) {
+				if (g1.depthSearchRek(0))
+					std::cout << "Alle Knoten wurden besucht" << std::endl;
+				else
+					std::cout << "Nicht alle Knoten wurden besucht" << std::endl;
+			}else{
+				std::cout << "Graph hat keine Knoten, vorher initialisieren" << std::endl;
+			}
 			break;
 		case 3:
 			//TODO
-			g1.breadthSearchiter(0);
+			if (g1.getAnzKnoten() != 0) {
+				if (g1.breadthSearchiter(0))
+					std::cout << "Alle Knoten wurden besucht" << std::endl;
+				else
+					std::cout << "Nicht alle Knoten wurden besucht" << std::endl;
+			}else {
+				std::cout << "Graph hat keine Knoten, vorher initialisieren" << std::endl;
+			}
 			break;
 		case 4:
 			//TODO

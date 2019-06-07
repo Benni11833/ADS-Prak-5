@@ -1,5 +1,6 @@
 #include "Graph.h"
 #include <fstream>
+#include <queue>
 
 GraphNode * Graph::getNodeByKey(int key)
 {
@@ -28,7 +29,12 @@ bool Graph::checkAllVisited()
 
 void Graph::startDephSearchRek(GraphNode * node)
 {
-	 
+	node->setVisited(true);
+	std::cout << "DFS - Knoten: " << node->getKey() << std::endl;
+	for (int i = 0; i < node->getNumberOfEdges(); i++)
+		if(nodes_[node->getEdge(i)->To_] && !nodes_[node->getEdge(i)->To_]->getVisited())
+			//Kein nullptr und wurde noch nicht besucht
+			startDephSearchRek(nodes_[node->getEdge(i)->To_]);
 }
 
 bool Graph::testChildComponent(GraphNode * node)	//???
@@ -92,13 +98,33 @@ void Graph::printAll()
 
 bool Graph::depthSearchRek(int startKey)
 {
+	setAllUnvisited();
 	startDephSearchRek(nodes_[startKey]);
 	return checkAllVisited();
 }
 
 bool Graph::breadthSearchiter(int startKey)
 {
-	return false;
+	setAllUnvisited();
+	std::queue<GraphNode*> q;
+	GraphNode *v = nullptr;
+	q.push(nodes_[startKey]);
+	nodes_[startKey]->setVisited(true);
+	while (!q.empty()) {
+		v = q.front();
+		//v->setVisited(true);
+		q.pop();
+		std::cout << "BFS - Knoten: " << v->getKey() << std::endl;
+		if (v != nullptr) {
+			for (int i = 0; i < v->getNumberOfEdges(); i++)
+				if (nodes_[v->getEdge(i)->To_] && !nodes_[v->getEdge(i)->To_]->getVisited()) {
+					nodes_[v->getEdge(i)->To_]->setVisited(true);
+					q.push(nodes_[v->getEdge(i)->To_]);
+				}
+		}
+	}
+
+	return checkAllVisited();
 }
 
 double Graph::prim(int startKey)
@@ -113,5 +139,10 @@ double Graph::kruskal(int startKey)
 
 int Graph::getAnzKnoten()
 {
-	return 0;
+	//return nodes_.size();	//gibt mehr Knoten an als normalerweise drin sind
+	int count = 0;
+	for (int i = 0; i < nodes_.size(); i++)
+		if (nodes_[i])
+			++count;
+	return count;
 }
