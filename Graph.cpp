@@ -1,4 +1,5 @@
 #include "Graph.h"
+#include "Edge.h"
 #include <fstream>
 #include <queue>
 
@@ -72,11 +73,11 @@ bool Graph::init(std::string file)
 	while (inFile >> from >> to >> weight) {
 		if (nodes_[from] == nullptr) {	//Knoten existiert noch nicht
 			nodes_[from] = new GraphNode{ from };
-			Edge e = Edge{ to, weight };
+			Edge e = Edge{from, to, weight };
 			nodes_[from]->addEdge(e);
 		}
 		else {	////Knoten existiert schon -> nur neue Edge hinzufuegen
-			nodes_[from]->addEdge(Edge{ to, weight });
+			nodes_[from]->addEdge(Edge{from, to, weight });
 		}
 	}
 
@@ -139,10 +140,12 @@ double Graph::kruskal(int startKey)
 		return 0.0;
 	//else:
 	std::priority_queue<Edge*> pq;
+	std::vector<Edge*> mst;
+	mst.clear();
 	Edge* e = nullptr;
 	//std::vector<Edge*> e;	e.clear();
 	std::vector<bool> marked;	marked.resize(anzKnoten_, false);
-	//Alle Kanten in vector fuegen:
+	//Alle Kanten in priority_queue fuegen:
 	for (int i = 0; i < nodes_.size(); i++)
 		for (int j = 0; j < nodes_[i]->getNumberOfEdges(); j++)
 			pq.push(nodes_[i]->getEdge(j));
@@ -150,7 +153,12 @@ double Graph::kruskal(int startKey)
 	while (!pq.empty()) {
 		e = pq.top();
 		pq.pop();
-		
+		if (nodes_[e->From_]->getVisited() != nodes_[e->To_]->getVisited())
+			mst.push_back(e);
+		for (int i = 0; i < nodes_.size(); i++) {
+			if (nodes_[i]->getVisited() == nodes_[e->To_]->getVisited())
+				nodes_[i]->setVisited(nodes_[e->To_]->getVisited());
+		}
 	}
 }
 

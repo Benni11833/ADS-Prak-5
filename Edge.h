@@ -1,8 +1,10 @@
 struct Edge{
+	int From_;
     int To_;
     double Weight_;
     
-    Edge(int To=-1, double Weight=-1.0){
+	Edge(int From = -1, int To = -1, double Weight = -1.0) {
+		From_ = From;
         To_ = To;
         Weight_ = Weight;
     }
