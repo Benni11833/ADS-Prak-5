@@ -131,10 +131,18 @@ bool Graph::breadthSearchiter(int startKey)
 
 double Graph::prim(int startKey)
 {
+	//Alle adjazenten Knoten vom startKnoten in pq pushen:
 	std::priority_queue<Edge*> pq;
-	std::vector<Edge*> mst;
-	mst.resize(0);
-	pq.push(nodes_[startKey]->getEdge(0));
+	for (int i = 0; i < nodes_.size(); i++)
+		for (int n = 0; n < nodes_[i]->getNumberOfEdges(); n++)
+			pq.push(nodes_[i]->getEdge(n));
+
+	setAllUnvisited();
+	nodes_[startKey]->setVisited(true);
+	double mst_weight = 0;
+	//std::vector<Edge*> mst;
+	//mst.resize(0);
+	//pq.push(nodes_[startKey]->getEdge(0));
 	Edge *e = nullptr;
 	int v, w;
 
@@ -142,17 +150,17 @@ double Graph::prim(int startKey)
 		e = pq.top();
 		pq.pop();
 		v = e->From_;
+		mst_weight += e->Weight_;
 		w = e->To_;
 		if (nodes_[v]->getVisited() && nodes_[w]->getVisited())
 			continue;
-		mst.push_back(e);
 		if (!nodes_[v]->getVisited())
 			nodes_[v]->setVisited(true);
 		if (!nodes_[w]->getVisited())
 			nodes_[w]->setVisited(true);
 	}
 
-	return 0.0;
+	return mst_weight;
 }
 
 double Graph::kruskal(int startKey)
@@ -160,7 +168,11 @@ double Graph::kruskal(int startKey)
 	if(anzKnoten_ == 0)
 		return 0.0;
 	//else
-	return 0.0;
+	int mst_weight = 0;
+
+
+
+	return mst_weight;
 }
 
 int Graph::getAnzKnoten()
