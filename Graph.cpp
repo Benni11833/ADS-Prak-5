@@ -131,6 +131,27 @@ bool Graph::breadthSearchiter(int startKey)
 
 double Graph::prim(int startKey)
 {
+	std::priority_queue<Edge*> pq;
+	std::vector<Edge*> mst;
+	mst.resize(0);
+	pq.push(nodes_[startKey]->getEdge(0));
+	Edge *e = nullptr;
+	int v, w;
+
+	while (!pq.empty()) {
+		e = pq.top();
+		pq.pop();
+		v = e->From_;
+		w = e->To_;
+		if (nodes_[v]->getVisited() && nodes_[w]->getVisited())
+			continue;
+		mst.push_back(e);
+		if (!nodes_[v]->getVisited())
+			nodes_[v]->setVisited(true);
+		if (!nodes_[w]->getVisited())
+			nodes_[w]->setVisited(true);
+	}
+
 	return 0.0;
 }
 
@@ -138,28 +159,8 @@ double Graph::kruskal(int startKey)
 {
 	if(anzKnoten_ == 0)
 		return 0.0;
-	//else:
-	std::priority_queue<Edge*> pq;
-	std::vector<Edge*> mst;
-	mst.clear();
-	Edge* e = nullptr;
-	//std::vector<Edge*> e;	e.clear();
-	std::vector<bool> marked;	marked.resize(anzKnoten_, false);
-	//Alle Kanten in priority_queue fuegen:
-	for (int i = 0; i < nodes_.size(); i++)
-		for (int j = 0; j < nodes_[i]->getNumberOfEdges(); j++)
-			pq.push(nodes_[i]->getEdge(j));
-	
-	while (!pq.empty()) {
-		e = pq.top();
-		pq.pop();
-		if (nodes_[e->From_]->getVisited() != nodes_[e->To_]->getVisited())
-			mst.push_back(e);
-		for (int i = 0; i < nodes_.size(); i++) {
-			if (nodes_[i]->getVisited() == nodes_[e->To_]->getVisited())
-				nodes_[i]->setVisited(nodes_[e->To_]->getVisited());
-		}
-	}
+	//else
+	return 0.0;
 }
 
 int Graph::getAnzKnoten()
