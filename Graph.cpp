@@ -169,20 +169,22 @@ double Graph::kruskal(int startKey)	//zuerst ohne startKey
 {
 	setAllUnvisited();
 	double mst_weight = 0;
-	Edge* e = nullptr;
-	std::priority_queue<Edge*> pq;
+	Edge e;
+	std::priority_queue<Edge> pq;
 	for (int i = 0; i < nodes_.size(); i++)
 		if (nodes_[i]) {
 			for (int j = 0; j < nodes_[i]->getNumberOfEdges(); j++)
-				pq.push(nodes_[i]->getEdge(j));
+				pq.push(*(nodes_[i]->getEdge(j)));
 		}
 	//Leichteste Kante rausnehmen und an MST anhaengen, wenn durch diese kein Zyklus entsteht(From, To sollten unvisited sein)
 	while (!pq.empty()) {
 		e = pq.top();	pq.pop();
-		if (!getNodeByKey(e->From_)->getVisited() && nodes_[e->To_] && !getNodeByKey(e->To_)->getVisited()) {
-			getNodeByKey(e->From_)->setVisited(true);
-			getNodeByKey(e->To_)->setVisited(true);
-			mst_weight += e->Weight_;
+		if (!getNodeByKey(e.From_)->getVisited() && nodes_[e.To_] && !getNodeByKey(e.To_)->getVisited()) {
+			getNodeByKey(e.From_)->setVisited(true);
+			getNodeByKey(e.To_)->setVisited(true);
+			mst_weight += e.Weight_;
+			std::cout << "Mst - Knoten: " << e.From_ << "->" << e.To_ << ", Weight: " << e.Weight_ << std::endl;
+			std::cin.get();
 		}
 	}
 
