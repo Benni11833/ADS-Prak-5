@@ -1,5 +1,4 @@
 #include "Graph.h"
-#include "Edge.h"
 #include <fstream>
 #include <queue>
 
@@ -131,6 +130,9 @@ bool Graph::breadthSearchiter(int startKey)
 
 double Graph::prim(int startKey)
 {
+	return -1;
+
+
 	//Alle adjazenten Knoten vom startKnoten in pq pushen:
 	std::priority_queue<Edge*> pq;
 	for (int i = 0; i < nodes_.size(); i++)
@@ -163,14 +165,26 @@ double Graph::prim(int startKey)
 	return mst_weight;
 }
 
-double Graph::kruskal(int startKey)
+double Graph::kruskal(int startKey)	//zuerst ohne startKey
 {
-	if(anzKnoten_ == 0)
-		return 0.0;
-	//else
-	int mst_weight = 0;
-
-
+	setAllUnvisited();
+	double mst_weight = 0;
+	Edge* e = nullptr;
+	std::priority_queue<Edge*> pq;
+	for (int i = 0; i < nodes_.size(); i++)
+		if (nodes_[i]) {
+			for (int j = 0; j < nodes_[i]->getNumberOfEdges(); j++)
+				pq.push(nodes_[i]->getEdge(j));
+		}
+	//Leichteste Kante rausnehmen und an MST anhaengen, wenn durch diese kein Zyklus entsteht(From, To sollten unvisited sein)
+	while (!pq.empty()) {
+		e = pq.top();	pq.pop();
+		if (!getNodeByKey(e->From_)->getVisited() && nodes_[e->To_] && !getNodeByKey(e->To_)->getVisited()) {
+			getNodeByKey(e->From_)->setVisited(true);
+			getNodeByKey(e->To_)->setVisited(true);
+			mst_weight += e->Weight_;
+		}
+	}
 
 	return mst_weight;
 }

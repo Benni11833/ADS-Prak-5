@@ -24,7 +24,6 @@ int main() {
 		print_menu();
 		std::cin >> choice;
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-		std::cout << "Anz: " << g1.getAnzKnoten() << std::endl;
 		switch (choice - '0') {
 		case 1:
 			std::cout << "Datei: ";
@@ -56,11 +55,13 @@ int main() {
 			break;
 		case 4:
 			//TODO
-			g1.prim(0);
+			std::cout << "Gewicht von MST mit Kruskal: " << g1.prim(0)
+				<< std::endl;
 			break;
 		case 5:
 			//TODO
-			g1.kruskal(0);
+			std::cout << "Gewicht von MST mit Kruskal: " << g1.kruskal(0)
+				<< std::endl;
 			break;
 		case 6:
 			g1.printAll();
