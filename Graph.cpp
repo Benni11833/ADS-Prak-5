@@ -134,7 +134,7 @@ bool Graph::breadthSearchiter(int startKey)
 
 double Graph::prim(int startKey)
 {
-	//Alle adjazenten Knoten vom startKnoten in pq pushen:
+	/*//Alle adjazenten Knoten vom startKnoten in pq pushen:
 	std::priority_queue<Edge*> pq;
 	for (int i = 0; i < nodes_.size(); i++)
 		for (int n = 0; n < nodes_[i]->getNumberOfEdges(); n++)
@@ -163,6 +163,36 @@ double Graph::prim(int startKey)
 			nodes_[w]->setVisited(true);
 	}
 
+	return mst_weight;*/
+
+	/*Idee: Pushe alle Kanten von startKey in pq und waehle dann die mit geringsten Kosten und haenge sie an MST
+	-> wenn diese Kante keinen Zyklus bildet(!e.From_->getVisited() && !e.To_->getVisited()
+	Methode um alle Kanten ausgehend von einem Key in pq pushed*/
+	
+	if (!nodes_[startKey]) {
+		std::cerr << "Startkey: " << startKey << "nicht gueltig..." << std::endl;
+		return -1;
+	}
+
+	std::priority_queue<Edge> pq;
+	double mst_weight = 0.0;
+	Edge e;
+	setAllUnvisited();
+	//Kanten von StartKnoten in pq pushen
+	for (int i = 0; i < nodes_[startKey]->getNumberOfEdges(); i++)
+		pq.push(*(nodes_[startKey]->getEdge(i)));
+	while (!pq.empty()) {
+		e = pq.top();	pq.pop();
+		if (!nodes_[e.From_]->getVisited()) {
+			nodes_[e.From_]->setVisited(true);
+			mst_weight += e.Weight_;
+		}
+		for (int i = 0; i < nodes_[e.To_]->getNumberOfEdges(); i++) {
+			if (!nodes_[nodes_[e.To_]->getEdge(i)->To_]->getVisited())
+				pq.push(*(nodes_[e.To_]->getEdge(i)));
+		}
+	}
+
 	return mst_weight;
 }
 
@@ -182,10 +212,9 @@ double Graph::kruskal()
 		e = pq.top();	pq.pop();
 		if (nodes_[e.To_] && !getNodeByKey(e.To_)->getVisited() && !getNodeByKey(e.From_)->getVisited()) {
 			getNodeByKey(e.From_)->setVisited(true);
-			//getNodeByKey(e.To_)->setVisited(true);
 			mst_weight += e.Weight_;
-			std::cout << "Mst - Knoten: " << e.From_ << "->" << e.To_ << ", Weight: " << e.Weight_ << std::endl;
-			std::cin.get();
+			//std::cout << "Mst - Knoten: " << e.From_ << "->" << e.To_ << ", Weight: " << e.Weight_ << std::endl;
+			//std::cin.get();
 		}
 	}
 
