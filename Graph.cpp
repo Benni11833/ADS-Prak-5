@@ -42,12 +42,12 @@ bool Graph::testChildComponent(GraphNode * node)	//???
 	return false;
 }
 
-Graph::Graph(bool gerichtet, bool gewichtet)
+/*Graph::Graph(bool gerichtet, bool gewichtet)
 {
 	gerichtet_ = gerichtet;
 	gewichtet_ = gewichtet;
 	anzKnoten_ = 0;
-}
+}*/
 
 Graph::~Graph()
 {
@@ -77,6 +77,10 @@ bool Graph::init(std::string file)
 		}
 		else {	////Knoten existiert schon -> nur neue Edge hinzufuegen
 			nodes_[from]->addEdge(Edge{from, to, weight });
+		}
+		if (!nodes_[to]) {
+			std::cout << "!nodes_[" << to << "]..." << std::endl;
+			nodes_[to] = new GraphNode{ to };
 		}
 	}
 
@@ -130,9 +134,6 @@ bool Graph::breadthSearchiter(int startKey)
 
 double Graph::prim(int startKey)
 {
-	return -1;
-
-
 	//Alle adjazenten Knoten vom startKnoten in pq pushen:
 	std::priority_queue<Edge*> pq;
 	for (int i = 0; i < nodes_.size(); i++)
@@ -165,7 +166,7 @@ double Graph::prim(int startKey)
 	return mst_weight;
 }
 
-double Graph::kruskal(int startKey)	//zuerst ohne startKey
+double Graph::kruskal()
 {
 	setAllUnvisited();
 	double mst_weight = 0;
@@ -179,9 +180,9 @@ double Graph::kruskal(int startKey)	//zuerst ohne startKey
 	//Leichteste Kante rausnehmen und an MST anhaengen, wenn durch diese kein Zyklus entsteht(From, To sollten unvisited sein)
 	while (!pq.empty()) {
 		e = pq.top();	pq.pop();
-		if (!getNodeByKey(e.From_)->getVisited() && nodes_[e.To_] && !getNodeByKey(e.To_)->getVisited()) {
+		if (nodes_[e.To_] && !getNodeByKey(e.To_)->getVisited() && !getNodeByKey(e.From_)->getVisited()) {
 			getNodeByKey(e.From_)->setVisited(true);
-			getNodeByKey(e.To_)->setVisited(true);
+			//getNodeByKey(e.To_)->setVisited(true);
 			mst_weight += e.Weight_;
 			std::cout << "Mst - Knoten: " << e.From_ << "->" << e.To_ << ", Weight: " << e.Weight_ << std::endl;
 			std::cin.get();

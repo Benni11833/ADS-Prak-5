@@ -15,13 +15,18 @@ private:
 	void startDephSearchRek(GraphNode *node);
 	bool testChildComponent(GraphNode *node);
 public:
-	Graph(bool gerichtet, bool gewichtet);
+	//Graph(bool gerichtet, bool gewichtet);
+	Graph() {
+		anzKnoten_ = 0;
+		gerichtet_ = gewichtet_ = false;
+		nodes_.clear();
+	}
 	~Graph();
 	bool init(std::string file);
 	void printAll();
 	bool depthSearchRek(int startKey);
 	bool breadthSearchiter(int startKey);
 	double prim(int startKey);
-	double kruskal(int startKey);
+	double kruskal();
 	int getAnzKnoten();
 };

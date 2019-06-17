@@ -2,7 +2,9 @@
 
 GraphNode::GraphNode(int key) {
 	key_ = key;
-	//def-construktor fuer edge_
+	component_ = -1;
+	visited_ = false;
+	edges_.clear();
 }
 bool GraphNode::getVisited() { return visited_; }
 void GraphNode::setVisited(bool visited) { visited_ = visited; }

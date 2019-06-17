@@ -12,11 +12,12 @@ void print_menu() {
 		<< "?> ";
 }
 
-#include <queue>
+//#include <queue>
 
 int main() {
 
-	Graph g1{ false, true };
+	//Graph g1{ false, true };
+	Graph g1;
 	char choice = '\0';
 	std::string file;
 	bool flag = true;
@@ -55,12 +56,12 @@ int main() {
 			break;
 		case 4:
 			//TODO
-			std::cout << "Gewicht von MST mit Kruskal: " << g1.kruskal(0)
+			std::cout << "Gewicht von MST mit Kruskal: " << g1.prim(0)
 				<< std::endl;
 			break;
 		case 5:
 			//TODO
-			std::cout << "Gewicht von MST mit Kruskal: " << g1.kruskal(0)
+			std::cout << "Gewicht von MST mit Kruskal: " << g1.kruskal()
 				<< std::endl;
 			break;
 		case 6:
