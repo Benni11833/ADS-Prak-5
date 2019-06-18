@@ -7,8 +7,7 @@
 * Änderungen untersagt!
 *************************************************/
 #include "catch.hpp"
-#include "Graph.h"
-//#include "GraphNode.h"
+#include "graph.h"
 #include <string>
 #include <iostream>
 

@@ -1,5 +1,7 @@
 #include "Graph.h"
 #include <iostream>
+#define CATCH_CONFIG_RUNNER
+#include "catch.hpp"
 
 void print_menu() {
 	std::cout << "Graph-Menue" << std::endl
@@ -12,15 +14,19 @@ void print_menu() {
 		<< "?> ";
 }
 
-//#include <queue>
-
 int main() {
+
+	//UnitTests:
+	Catch::Session().run();
+	system("pause");
+	return 0;
 
 	//Graph g1{ false, true };
 	Graph g1;
 	char choice = '\0';
 	std::string file;
 	bool flag = true;
+	int tmp;
 	while (flag) {
 		print_menu();
 		std::cin >> choice;
@@ -34,8 +40,10 @@ int main() {
 			break;
 		case 2:
 			//TODO
+			std::cout << "StartKnoten: ";
+			std::cin >> tmp;
 			if (g1.getAnzKnoten() != 0) {
-				if (g1.depthSearchRek(0))
+				if (g1.depthSearchRek(tmp))
 					std::cout << "Alle Knoten wurden besucht" << std::endl;
 				else
 					std::cout << "Nicht alle Knoten wurden besucht" << std::endl;

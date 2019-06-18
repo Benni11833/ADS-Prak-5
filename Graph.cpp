@@ -79,7 +79,7 @@ bool Graph::init(std::string file)
 			nodes_[from]->addEdge(Edge{from, to, weight });
 		}
 		if (!nodes_[to]) {
-			std::cout << "!nodes_[" << to << "]..." << std::endl;
+			//std::cout << "!nodes_[" << to << "]..." << std::endl;
 			nodes_[to] = new GraphNode{ to };
 		}
 	}
@@ -103,6 +103,8 @@ void Graph::printAll()
 
 bool Graph::depthSearchRek(int startKey)
 {
+	if (!nodes_[startKey])
+		return false;
 	setAllUnvisited();
 	startDephSearchRek(nodes_[startKey]);
 	return checkAllVisited();
@@ -119,7 +121,7 @@ bool Graph::breadthSearchiter(int startKey)
 		v = q.front();
 		//v->setVisited(true);
 		q.pop();
-		std::cout << "BFS - Knoten: " << v->getKey() << std::endl;
+		//std::cout << "BFS - Knoten: " << v->getKey() << std::endl;
 		if (v != nullptr) {
 			for (int i = 0; i < v->getNumberOfEdges(); i++)
 				if (nodes_[v->getEdge(i)->To_] && !nodes_[v->getEdge(i)->To_]->getVisited()) {
@@ -134,41 +136,6 @@ bool Graph::breadthSearchiter(int startKey)
 
 double Graph::prim(int startKey)
 {
-	/*//Alle adjazenten Knoten vom startKnoten in pq pushen:
-	std::priority_queue<Edge*> pq;
-	for (int i = 0; i < nodes_.size(); i++)
-		for (int n = 0; n < nodes_[i]->getNumberOfEdges(); n++)
-			pq.push(nodes_[i]->getEdge(n));
-
-	setAllUnvisited();
-	nodes_[startKey]->setVisited(true);
-	double mst_weight = 0;
-	//std::vector<Edge*> mst;
-	//mst.resize(0);
-	//pq.push(nodes_[startKey]->getEdge(0));
-	Edge *e = nullptr;
-	int v, w;
-
-	while (!pq.empty()) {
-		e = pq.top();
-		pq.pop();
-		v = e->From_;
-		mst_weight += e->Weight_;
-		w = e->To_;
-		if (nodes_[v]->getVisited() && nodes_[w]->getVisited())
-			continue;
-		if (!nodes_[v]->getVisited())
-			nodes_[v]->setVisited(true);
-		if (!nodes_[w]->getVisited())
-			nodes_[w]->setVisited(true);
-	}
-
-	return mst_weight;*/
-
-	/*Idee: Pushe alle Kanten von startKey in pq und waehle dann die mit geringsten Kosten und haenge sie an MST
-	-> wenn diese Kante keinen Zyklus bildet(!e.From_->getVisited() && !e.To_->getVisited()
-	Methode um alle Kanten ausgehend von einem Key in pq pushed*/
-	
 	if (!nodes_[startKey]) {
 		std::cerr << "Startkey: " << startKey << "nicht gueltig..." << std::endl;
 		return -1;
