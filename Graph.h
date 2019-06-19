@@ -31,5 +31,5 @@ public:
 	double kruskal();
 	int getAnzKnoten();
 	
-	bool checkForCycle(int node1, int node2);
+	bool check_if_connected(int node1, int node2);
 };

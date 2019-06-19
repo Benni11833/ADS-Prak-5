@@ -2,20 +2,6 @@
 #include <fstream>
 #include <queue>
 
-bool Graph::checkForCycle(int node1, int node2) { //returns true when cycle, false if not
-	for (int i = 0; i < nodes_[node1]->getNumberOfEdges(); i++) {
-		if (nodes_[nodes_[node1]->getEdge(i)->To_]->getVisited())
-			continue;
-		if (nodes_[node1]->getEdge(i)->To_ == nodes_[node2]->getEdge(0)->From_)
-			return true;
-		else if (checkForCycle(nodes_[node1]->getEdge(i)->To_, node2))
-			return true;
-		/*else if (!checkForCycle(nodes_[node1->getEdge(i)->To_], node2) && i == node1->getNumberOfEdges()-1)
-			return false;*/
-	}
-	return false;
-}
-
 GraphNode * Graph::getNodeByKey(int key)
 {
 	for (int i = 0; i < nodes_.size(); i++) {
@@ -206,21 +192,46 @@ double Graph::prim(int startKey)
 	return mst_weight;
 }
 
+bool Graph::check_if_connected(int node1, int node2) { //returns true when cycle, false if not
+	if (!nodes_[node1]->getVisited())
+		return false;
+	for (int i = 0; i < nodes_[node1]->getNumberOfEdges(); i++)
+		if (nodes_[node1]->getEdge(i)->To_ == node2)
+			return true;
+	for (int i = 0; i < nodes_[node1]->getNumberOfEdges(); i++)
+		if (check_if_connected(nodes_[node1]->getEdge(i)->To_, node2))
+			return true;
+
+	return false;
+}
+
 double Graph::kruskal()
 {
 	setAllUnvisited();
 	double mst_weight = 0;
 	int v, w;
+	std::vector<int> marked;
+	marked.resize(nodes_.size());
 	Edge e;
 	std::priority_queue<Edge> pq;
 	for (int i = 0; i < nodes_.size(); i++)
 		if (nodes_[i]) {
+			marked[i] = i;
 			for (int j = 0; j < nodes_[i]->getNumberOfEdges(); j++)
 				pq.push(*(nodes_[i]->getEdge(j)));
 		}
+	
 	//Leichteste Kante rausnehmen und an MST anhaengen, wenn durch diese kein Zyklus entsteht(From, To sollten unvisited sein)
 	while (!pq.empty()) {
+		e = pq.top();	pq.pop();
+		v = e.From_;	w = e.To_;
 		
+		//wenn durch hinzufuegen von e kein Zyklus entsteht:
+		if (!check_if_connected(v, w)) {
+			mst_weight += e.Weight_;
+			nodes_[v]->setVisited(true);
+			nodes_[w]->setVisited(true);
+		}
 	}
 
 	return mst_weight;
