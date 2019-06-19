@@ -2,6 +2,10 @@
 #include <fstream>
 #include <queue>
 
+bool Graph::checkForCycle(GraphNode* node1, GraphNode* node2) {
+
+}
+
 GraphNode * Graph::getNodeByKey(int key)
 {
 	for (int i = 0; i < nodes_.size(); i++) {
@@ -152,6 +156,8 @@ double Graph::prim(int startKey)
 		e = pq.top();	pq.pop();
 		if (!nodes_[e.From_]->getVisited()) {
 			nodes_[e.From_]->setVisited(true);
+			std::cout << "knoten: " << e.From_ << "->" << e.To_ << ", Weight: " << e.Weight_ << std::endl;
+			std::cin.get();
 			mst_weight += e.Weight_;
 		}
 		for (int i = 0; i < nodes_[e.To_]->getNumberOfEdges(); i++) {
@@ -177,11 +183,12 @@ double Graph::kruskal()
 	//Leichteste Kante rausnehmen und an MST anhaengen, wenn durch diese kein Zyklus entsteht(From, To sollten unvisited sein)
 	while (!pq.empty()) {
 		e = pq.top();	pq.pop();
-		if (nodes_[e.To_] && !getNodeByKey(e.To_)->getVisited() && !getNodeByKey(e.From_)->getVisited()) {
+		if (nodes_[e.To_] && !checkForCycle()) {
 			getNodeByKey(e.From_)->setVisited(true);
+			getNodeByKey(e.To_)->setVisited(true);
 			mst_weight += e.Weight_;
-			//std::cout << "Mst - Knoten: " << e.From_ << "->" << e.To_ << ", Weight: " << e.Weight_ << std::endl;
-			//std::cin.get();
+			std::cout << "Mst - Knoten: " << e.From_ << "->" << e.To_ << ", Weight: " << e.Weight_ << std::endl;
+			std::cin.get();
 		}
 	}
 

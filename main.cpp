@@ -17,9 +17,9 @@ void print_menu() {
 int main() {
 
 	//UnitTests:
-	Catch::Session().run();
-	system("pause");
-	return 0;
+	//Catch::Session().run();
+	//system("pause");
+	//return 0;
 
 	//Graph g1{ false, true };
 	Graph g1;
