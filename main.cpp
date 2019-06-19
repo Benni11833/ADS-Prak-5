@@ -21,7 +21,6 @@ int main() {
 	//system("pause");
 	//return 0;
 
-	//Graph g1{ false, true };
 	Graph g1;
 	char choice = '\0';
 	std::string file;
