@@ -22,6 +22,20 @@ int main() {
 	//return 0;
 
 	Graph g1;
+	g1.init("graph1.txt");
+	g1.printAll();
+	int tmp1, tmp2;
+	std::cout << "tmp1: ";	std::cin >> tmp1;
+	std::cout << "tmp2: ";	std::cin >> tmp2;
+	if (g1.checkForCycle(tmp1, tmp2))
+		std::cout << "Zyklus zwischen " << tmp1 << " - " << tmp2 << " existiert.\n";
+	else
+		std::cout << "Kein Zyklus zwischen " << tmp1 << " - " << tmp2 << " existiert.\n";
+	
+	system("Pause");
+	return 0;
+
+
 	char choice = '\0';
 	std::string file;
 	bool flag = true;

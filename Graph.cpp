@@ -2,7 +2,17 @@
 #include <fstream>
 #include <queue>
 
-bool Graph::checkForCycle(GraphNode* node1, GraphNode* node2) {
+bool Graph::checkForCycle(int node1, int node2) { //returns true when cycle, false if not
+	for (int i = 0; i < nodes_[node1]->getNumberOfEdges(); i++) {
+		if (nodes_[nodes_[node1]->getEdge(i)->To_]->getVisited())
+			continue;
+		if (nodes_[node1]->getEdge(i)->To_ == nodes_[node2]->getEdge(0)->From_)
+			return true;
+		else if (checkForCycle(nodes_[node1]->getEdge(i)->To_, node2))
+			return true;
+		/*else if (!checkForCycle(nodes_[node1->getEdge(i)->To_], node2) && i == node1->getNumberOfEdges()-1)
+			return false;*/
+	}
 	return false;
 }
 
@@ -157,20 +167,39 @@ double Graph::prim(int startKey)
 	double mst_weight = 0.0;
 	Edge e;
 	setAllUnvisited();
-	//Kanten von StartKnoten in pq pushen
+	int v, w;
+	
+	nodes_[startKey]->setVisited(true);
+	//alle adj von startKey pushen:
 	for (int i = 0; i < nodes_[startKey]->getNumberOfEdges(); i++)
-		pq.push(*(nodes_[startKey]->getEdge(i)));
+			pq.push(*(nodes_[startKey]->getEdge(i)));
+
 	while (!pq.empty()) {
-		e = pq.top();	pq.pop();
-		if (!nodes_[e.From_]->getVisited()) {
-			nodes_[e.From_]->setVisited(true);
-			//std::cout << "knoten: " << e.From_ << "->" << e.To_ << ", Weight: " << e.Weight_ << std::endl;
-			//std::cin.get();
-			mst_weight += e.Weight_;
+		e = pq.top();
+		pq.pop();
+		v = e.From_;
+		w = e.To_;
+
+		//kein Zyklus
+		if (nodes_[v]->getVisited() && nodes_[w]->getVisited())
+			continue;
+
+		//e zum mst hinzufuegen
+		mst_weight += e.Weight_;
+
+		//Adjazenten von v und w zum PQ hinzufuegen, wenn nicht schon vorher
+		if (!nodes_[v]->getVisited()) {
+			nodes_[v]->setVisited(true);
+			for (int i = 0; i < nodes_[v]->getNumberOfEdges(); i++)
+				if (!nodes_[nodes_[v]->getEdge(i)->To_]->getVisited())
+					pq.push(*(nodes_[v]->getEdge(i)));
 		}
-		for (int i = 0; i < nodes_[e.To_]->getNumberOfEdges(); i++) {
-			if (!nodes_[nodes_[e.To_]->getEdge(i)->To_]->getVisited())
-				pq.push(*(nodes_[e.To_]->getEdge(i)));
+			
+		if (!nodes_[w]->getVisited()) {
+			nodes_[w]->setVisited(true);
+			for (int i = 0; i < nodes_[w]->getNumberOfEdges(); i++)
+				if (!nodes_[nodes_[w]->getEdge(i)->To_]->getVisited())
+					pq.push(*(nodes_[w]->getEdge(i)));
 		}
 	}
 
@@ -181,6 +210,7 @@ double Graph::kruskal()
 {
 	setAllUnvisited();
 	double mst_weight = 0;
+	int v, w;
 	Edge e;
 	std::priority_queue<Edge> pq;
 	for (int i = 0; i < nodes_.size(); i++)
@@ -190,14 +220,7 @@ double Graph::kruskal()
 		}
 	//Leichteste Kante rausnehmen und an MST anhaengen, wenn durch diese kein Zyklus entsteht(From, To sollten unvisited sein)
 	while (!pq.empty()) {
-		e = pq.top();	pq.pop();
-		if (nodes_[e.To_] /*&& !checkForCycle(0, 2)*/) {
-			getNodeByKey(e.From_)->setVisited(true);
-			getNodeByKey(e.To_)->setVisited(true);
-			mst_weight += e.Weight_;
-			//std::cout << "Mst - Knoten: " << e.From_ << "->" << e.To_ << ", Weight: " << e.Weight_ << std::endl;
-			//std::cin.get();
-		}
+		
 	}
 
 	return mst_weight;

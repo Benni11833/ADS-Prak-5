@@ -14,7 +14,7 @@ private:
 	bool checkAllVisited();
 	void startDephSearchRek(GraphNode *node);
 	bool testChildComponent(GraphNode *node);
-	bool checkForCycle(GraphNode* node1, GraphNode* node2);
+	
 public:
 	//Graph(bool gerichtet, bool gewichtet);
 	Graph() {
@@ -30,4 +30,6 @@ public:
 	double prim(int startKey);
 	double kruskal();
 	int getAnzKnoten();
+	
+	bool checkForCycle(int node1, int node2);
 };
