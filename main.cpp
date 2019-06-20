@@ -18,7 +18,7 @@ int main() {
 
 	//UnitTests:
 	Catch::Session().run();
-	system("pause");
+	//system("pause");
 	return 0;
 
 	Graph g1;

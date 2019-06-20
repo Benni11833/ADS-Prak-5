@@ -7,7 +7,7 @@
 * Änderungen untersagt!
 *************************************************/
 #include "catch.hpp"
-#include "graph.h"
+#include "Graph.h"
 #include <string>
 #include <iostream>
 

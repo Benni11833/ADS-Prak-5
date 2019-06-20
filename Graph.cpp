@@ -211,28 +211,46 @@ double Graph::kruskal()
 	double mst_weight = 0;
 	int v, w;
 	std::vector<int> marked;
-	marked.resize(nodes_.size());
+	marked.resize(anzKnoten_);
+	std::vector<Edge> e_vec;
 	Edge e;
 	std::priority_queue<Edge> pq;
-	for (int i = 0; i < nodes_.size(); i++)
-		if (nodes_[i]) {
-			marked[i] = i;
-			for (int j = 0; j < nodes_[i]->getNumberOfEdges(); j++)
-				pq.push(*(nodes_[i]->getEdge(j)));
+
+	for(int i=0; i < anzKnoten_; i++){
+		for(int j=0; j < nodes_[i]->getNumberOfEdges(); j++){
+			e_vec.push_back(*(nodes_[i]->getEdge(j)));
 		}
+	}
+
+	for(int i=0; i < e_vec.size(); i++){
+		for(int j=0; j < e_vec.size(); j++)
+			pq.push(e_vec[j]);
+	}
+
+	for (int i = 0; i < anzKnoten_; i++)
+		if (nodes_[i])
+			marked[i] = i;
+	
 	
 	//Leichteste Kante rausnehmen und an MST anhaengen, wenn durch diese kein Zyklus entsteht(From, To sollten unvisited sein)
 	while (!pq.empty()) {
 		e = pq.top();	pq.pop();
 		v = e.From_;	w = e.To_;
 		
-		//wenn durch hinzufuegen von e kein Zyklus entsteht:
-		if (!check_if_connected(v, w)) {
+		if(marked[v] != marked[w]){
 			mst_weight += e.Weight_;
-			nodes_[v]->setVisited(true);
-			nodes_[w]->setVisited(true);
+			for(int i=0; i < anzKnoten_; i++){
+				if(marked[i] == marked[w])
+					marked[i] = marked[v];
+			}
 		}
-	}
+
+		}
+
+    
+    while(!pq.empty()){
+    
+    }
 
 	return mst_weight;
 }
