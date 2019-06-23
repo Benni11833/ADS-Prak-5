@@ -246,13 +246,6 @@ double Graph::kruskal()
 		}
 
 		}
-
-    
-    while(!pq.empty()){
-    
-    }
-
-	return mst_weight;
 }
 
 int Graph::getAnzKnoten()
