@@ -192,60 +192,35 @@ double Graph::prim(int startKey)
 	return mst_weight;
 }
 
-bool Graph::check_if_connected(int node1, int node2) { //returns true when cycle, false if not
-	if (!nodes_[node1]->getVisited())
-		return false;
-	for (int i = 0; i < nodes_[node1]->getNumberOfEdges(); i++)
-		if (nodes_[node1]->getEdge(i)->To_ == node2)
-			return true;
-	for (int i = 0; i < nodes_[node1]->getNumberOfEdges(); i++)
-		if (check_if_connected(nodes_[node1]->getEdge(i)->To_, node2))
-			return true;
-
-	return false;
-}
-
 double Graph::kruskal()
 {
 	setAllUnvisited();
 	double mst_weight = 0;
 	int v, w;
-	std::vector<int> marked;
-	marked.resize(anzKnoten_);
-	std::vector<Edge> e_vec;
-	Edge e;
+	std::vector<int> treeID;	treeID.resize(nodes_.size());
 	std::priority_queue<Edge> pq;
-
-	for(int i=0; i < anzKnoten_; i++){
-		for(int j=0; j < nodes_[i]->getNumberOfEdges(); j++){
-			e_vec.push_back(*(nodes_[i]->getEdge(j)));
-		}
+	Edge e;
+	std::vector<GraphNode*> e_vec;
+	for (int i = 0; i < nodes_.size(); i++) {
+		e_vec.push_back(nodes_[i]);
+		treeID[i] = i;
+		for (int j = 0; j < nodes_[i]->getNumberOfEdges(); j++)
+			pq.push(*(nodes_[i]->getEdge(j)));
 	}
 
-	for(int i=0; i < e_vec.size(); i++){
-		for(int j=0; j < e_vec.size(); j++)
-			pq.push(e_vec[j]);
-	}
-
-	for (int i = 0; i < anzKnoten_; i++)
-		if (nodes_[i])
-			marked[i] = i;
-	
-	
-	//Leichteste Kante rausnehmen und an MST anhaengen, wenn durch diese kein Zyklus entsteht(From, To sollten unvisited sein)
 	while (!pq.empty()) {
 		e = pq.top();	pq.pop();
 		v = e.From_;	w = e.To_;
-		
-		if(marked[v] != marked[w]){
+		if (treeID[v] != treeID[w]) {
 			mst_weight += e.Weight_;
-			for(int i=0; i < anzKnoten_; i++){
-				if(marked[i] == marked[w])
-					marked[i] = marked[v];
-			}
+			for (int i = 0; i < treeID.size(); i++)
+				if (i != w && treeID[i] == treeID[w])
+					treeID[i] = treeID[v];
+			treeID[w] = treeID[v];	//treeID[i] = treeID[v] aendert wert so, dass vorherige Baum-IDs nicht mehr erkannt werden
 		}
+	}
 
-		}
+	return mst_weight;
 }
 
 int Graph::getAnzKnoten()

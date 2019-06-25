@@ -30,6 +30,4 @@ public:
 	double prim(int startKey);
 	double kruskal();
 	int getAnzKnoten();
-	
-	bool check_if_connected(int node1, int node2);
 };
