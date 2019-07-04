@@ -134,7 +134,7 @@ bool Graph::breadthSearchiter(int startKey)
 	return checkAllVisited();
 }
 
-double Graph::prim(int startKey)
+double Graph::prim(int startKey)	//Liefert MST / Minimal Spanning Tree - Minimaler SpannBaum(der von einem startKnoten alle Knoten mit den wenigsten Kosten erreicht)
 {
 	if (!nodes_[startKey]) {
 		std::cerr << "Startkey: " << startKey << "nicht gueltig..." << std::endl;
