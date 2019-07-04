@@ -2,7 +2,12 @@
 #include <fstream>
 #include <queue>
 
-GraphNode * Graph::getNodeByKey(int key)
+/*
+init
+printAll
+*/
+
+GraphNode *Graph::getNodeByKey(int key)
 {
 	for (int i = 0; i < nodes_.size(); i++) {
 		if (nodes_[i]->getKey() == key)
@@ -37,18 +42,6 @@ void Graph::startDephSearchRek(GraphNode * node)
 			startDephSearchRek(nodes_[node->getEdge(i)->To_]);
 }
 
-bool Graph::testChildComponent(GraphNode * node)	//???
-{
-	return false;
-}
-
-/*Graph::Graph(bool gerichtet, bool gewichtet)
-{
-	gerichtet_ = gerichtet;
-	gewichtet_ = gewichtet;
-	anzKnoten_ = 0;
-}*/
-
 Graph::~Graph()
 {
 	for (int i = 0; i < nodes_.size(); i++)
@@ -64,29 +57,29 @@ bool checkForEdge(GraphNode* node, int From) {
 	return false;
 }
 
-bool Graph::init(std::string file)
+bool Graph::init(std::string file)	//initialisiert/erstellt einen Graphen mit hilfe einer Textdatei der Form(v -> w Kosten)
 {
 	std::ifstream inFile;
-	inFile.open(file);
-	int from, to;
-	double weight;
-	if (!inFile) {
+	inFile.open(file);//Datei zum einlesen oeffnen
+	int from, to;	//Kante from - to/ von - bis
+	double weight;	//kosten der Kante from-to
+	if (!inFile) {	//wenn Datei nicht geoeffnet werden konnte, breche ab
 		std::cerr << "Datei " << file << " konnte nicht geoeffnet werden.\n";
 		return false;
 	}
-	inFile >> anzKnoten_;
-	nodes_.resize(anzKnoten_, nullptr);
-	while (inFile >> from >> to >> weight) {
-		if (!nodes_[from])	//Knoten existiert noch nicht
-			nodes_[from] = new GraphNode{ from };
-		if (!nodes_[to])
-			nodes_[to] = new GraphNode{ to };
+	inFile >> anzKnoten_;	//erster Eintrag in TextDatei ist die Anzahl der Knoten
+	nodes_.resize(anzKnoten_, nullptr);	//KnotenArray resizen mit der Anzahl der Knoten
+	while (inFile >> from >> to >> weight) {	//einlesen der Kante: von - bis - Kosten der Kante
+		if (!nodes_[from])	//Knoten 'from/von' existiert noch nicht im KnotenArray
+			nodes_[from] = new GraphNode{ from };	//->neuen Knoten anlegen
+		if (!nodes_[to])	//Knoten 'to/bis' existert noch nicht im KnotenArray
+			nodes_[to] = new GraphNode{ to };	//->neuen Knoten anlegen
 		//Pruefen ob Edge schon in nodes_[from]:
-		if (!checkForEdge(nodes_[from], to)) {
-			Edge e = Edge{ from, to, weight };
-			nodes_[from]->addEdge(e);
+		if (!checkForEdge(nodes_[from], to)) {	//ueberpruefen ob Die Kante bereits in dem Knoten 'from/von' enthalten ist
+			Edge e = Edge{ from, to, weight };	//->wenn nicht, neue Kante erzeugen
+			nodes_[from]->addEdge(e);			//-> und zum KantenArray(edges_) des Knotens 'from/von' hinzufuegen
 		}
-		if (!checkForEdge(nodes_[to], from)) {
+		if (!checkForEdge(nodes_[to], from)) {	//gleiches wie oben, nur fuer den Knoten 'to/bis' ...
 			Edge e = Edge{ to, from, weight };
 			nodes_[to]->addEdge(e);
 		}
@@ -95,13 +88,13 @@ bool Graph::init(std::string file)
 	return true;
 }
 
-void Graph::printAll()
+void Graph::printAll()	//gibt den Graphen aus
 {
-	for (int i = 0; i < nodes_.size(); i++) {
-		if (nodes_[i] != nullptr) {
-			std::cout << nodes_[i]->getKey();
-			for (int ii = 0; ii < nodes_[i]->getNumberOfEdges(); ii++) {
-				std::cout << " -> " << nodes_[i]->getEdge(ii)->To_ << " [" << nodes_[i]->getEdge(ii)->Weight_ << ']';
+	for (int i = 0; i < nodes_.size(); i++) {	//Alle Knoten durchgehen
+		if (nodes_[i] != nullptr) {	//wenn der Knoten vorhanden ist(ist er != nullptr)
+			std::cout << nodes_[i]->getKey();	//Knoten ausgeben(seinen Wert/Schluessel)
+			for (int ii = 0; ii < nodes_[i]->getNumberOfEdges(); ii++) {	//Alle Kanten, die von dem Knoten/Schluessel zu einem adjazenten/benachbarten Knoten fuehren ausgeben
+				std::cout << " -> " << nodes_[i]->getEdge(ii)->To_ << " [" << nodes_[i]->getEdge(ii)->Weight_ << ']';	//Ziel der Kante ('to/bis') und Kosten/gewicht der Kante
 			}
 			std::cout << std::endl;
 		}
@@ -127,7 +120,6 @@ bool Graph::breadthSearchiter(int startKey)
 	nodes_[startKey]->setVisited(true);
 	while (!q.empty()) {
 		v = q.front();
-		//v->setVisited(true);
 		q.pop();
 		//std::cout << "BFS - Knoten: " << v->getKey() << std::endl;
 		if (v != nullptr) {
@@ -171,6 +163,7 @@ double Graph::prim(int startKey)
 			continue;
 
 		//e zum mst hinzufuegen
+		//std::cout << "Knoten: " << w << " Weight: " << e.Weight_ << std::endl;
 		mst_weight += e.Weight_;
 
 		//Adjazenten von v und w zum PQ hinzufuegen, wenn nicht schon vorher
@@ -197,13 +190,12 @@ double Graph::kruskal()
 	setAllUnvisited();
 	double mst_weight = 0;
 	int v, w;
-	std::vector<int> treeID;	treeID.resize(nodes_.size());
 	std::priority_queue<Edge> pq;
 	Edge e;
 	std::vector<GraphNode*> e_vec;
 	for (int i = 0; i < nodes_.size(); i++) {
 		e_vec.push_back(nodes_[i]);
-		treeID[i] = i;
+		nodes_[i]->setComponent(i);
 		for (int j = 0; j < nodes_[i]->getNumberOfEdges(); j++)
 			pq.push(*(nodes_[i]->getEdge(j)));
 	}
@@ -211,12 +203,13 @@ double Graph::kruskal()
 	while (!pq.empty()) {
 		e = pq.top();	pq.pop();
 		v = e.From_;	w = e.To_;
-		if (treeID[v] != treeID[w]) {
+		if (nodes_[v]->getComponent() != nodes_[w]->getComponent()) {
 			mst_weight += e.Weight_;
-			for (int i = 0; i < treeID.size(); i++)
-				if (i != w && treeID[i] == treeID[w])
-					treeID[i] = treeID[v];
-			treeID[w] = treeID[v];	//treeID[i] = treeID[v] aendert wert so, dass vorherige Baum-IDs nicht mehr erkannt werden
+			std::cout << "Knoten: " << w << "->" << v << " Weight: " << e.Weight_ << std::endl;
+			for (int i = 0; i < nodes_.size(); i++)
+				if (i != w && nodes_[i]->getComponent() == nodes_[w]->getComponent())
+					nodes_[i]->setComponent(nodes_[v]->getComponent());
+			nodes_[w]->setComponent(nodes_[v]->getComponent());	//i->componen = v->component aendert wert so, dass vorherige Baum-IDs/Component nicht mehr erkannt werden
 		}
 	}
 
@@ -225,7 +218,6 @@ double Graph::kruskal()
 
 int Graph::getAnzKnoten()
 {
-	//return nodes_.size();	//gibt mehr Knoten an als normalerweise drin sind
 	int count = 0;
 	for (int i = 0; i < nodes_.size(); i++)
 		if (nodes_[i])
